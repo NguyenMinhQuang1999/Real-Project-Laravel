@@ -5,7 +5,7 @@
 
 @section('css')
 <link href="{{asset('venders/select2/select2.min.css')}}" rel="stylesheet" />
-<script src="{{asset('admins/product/add/add.css')}}"></script>
+<script src="{{asset('/admins/product/add/add.css')}}"></script>
 
 <style>
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -26,7 +26,7 @@
       <div class="row">
         <div class="col-md-8">
           <div class="card">
-            <form role="form" method ="post" action="{{ route('product.store') }}" enctype="multipart/form-data">
+            <form role="form" method ="post" action="{{ route('product.update', ["id" => $product->id]) }}" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
@@ -36,7 +36,7 @@
 
                  <div class="form-group">
                     <label for="">Giá sản phẩm</label>
-                    <input type="text" class="form-control" name="price" id="" value="{{ number_format($product->price) }}">
+                    <input type="text" class="form-control" name="price" id="" value="{{ ($product->price) }}">
                  </div>
 
                  <div class="form-group">
@@ -69,7 +69,7 @@
                     <label for="">Chọn tag</label>
                     <select class="form-control tags_select_choose" name="tags[]" multiple="multiple">
                         @foreach($product->tags as $key => $tag)
-                            <option  selected value="{{ $tag->id }}">{{ $tag->name }}</option>
+                            <option  selected value="{{ $tag->name }}">{{ $tag->name }}</option>
                         @endforeach
 
                     </select>
@@ -116,7 +116,7 @@
 
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script src="{{asset('venders/select2/select2.min.js')}}"></script>
-<script src="{{asset('admins/product/add/add.js')}}"></script>
+<script src="{{asset('/admins/product/add/add.js')}}"></script>
 <script>
     $(function () {
     $(".tags_select_choose").select2({

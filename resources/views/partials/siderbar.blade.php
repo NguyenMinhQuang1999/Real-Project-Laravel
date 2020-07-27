@@ -77,6 +77,46 @@
             </a>
           </li>
 
+        <li class="nav-item">
+            <a href="{{route('slider.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Slider
+                <span class="right badge badge-success">New</span>
+              </p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{route('setting.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Setting
+                <span class="right badge badge-secondary">New</span>
+              </p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{route('user.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Nhân viên
+                <span class="right badge badge-light">New</span>
+              </p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{route('role.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Vai trò (Roles)
+                <span class="right badge badge-primary">New</span>
+              </p>
+            </a>
+        </li>
+
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Components\Recusive;
-
 use App\Category;
 use App\Traits\StoreImageTrait;
 use App\Product;
 use App\ProductImage;
 use App\Tag;
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\ProductAddRequest;
 
 class AdminProductController extends Controller
 {
@@ -66,7 +66,7 @@ class AdminProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductAddRequest $request)
     {
         //
         try {
@@ -112,8 +112,6 @@ class AdminProductController extends Controller
             DB::rollBack();
             Log::error('message' . $exception->getMessage() . ' Line ' . $exception->getLine());
         }
-
-        dd($product);
     }
 
     /**
@@ -151,6 +149,55 @@ class AdminProductController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        try {
+            DB::beginTransaction();
+            $dataProductUpdate = [
+                'name' => $request->name,
+                'price' => $request->price,
+                'content' => $request->content,
+                'user_id' => auth()->id(),
+                'category_id' => $request->category_id
+
+            ];
+            $dataUpload = $this->StoreTraitUpload($request, 'feature_image_path', 'products');
+            if (!empty($dataUpload)) {
+                $dataProductUpdate['feature_image_path'] = $dataUpload['file_path'];
+                $dataProductUpdate['feature_image_name'] = $dataUpload['file_name'];
+            }
+            //tra ve true/false
+            $this->product->find($id)->update($dataProductUpdate);
+            //lay ban ghi thuoc id dang chon
+            $product = $this->product->find($id);
+
+            // insert data to product_image
+            if ($request->hasFile('image_path')) {
+                //xoa tat ca anh chi tiet truoc khi update
+                $this->productImage->where('product_id', $id)->delete();
+                foreach ($request->image_path as $fileItem) {
+                    $dataImageUpload = $this->storeTraitUploadMultiple($fileItem, 'product');
+                    //se tu cap nhat id san pham vao bang product_image
+                    $product->images()->create([
+                        'image_name' => $dataImageUpload['file_name'],
+                        'image_path' => $dataImageUpload['file_path']
+                    ]);
+                }
+            }
+            //inset data to tags
+
+            if (!empty($request->tags)) {
+                foreach ($request->tags as $tagItem) {
+                    $tagInstance = $this->tag->firstOrCreate(['name' => $tagItem]);
+                    $tagId[] = $tagInstance->id;
+                }
+                $product->tags()->sync($tagId);
+            }
+            DB::commit();
+            return redirect()->route('product.index');
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error('message' . $exception->getMessage() . ' Line ' . $exception->getLine());
+        }
     }
 
     /**
@@ -162,5 +209,18 @@ class AdminProductController extends Controller
     public function delete($id)
     {
         //
+        try {
+            $this->product->find($id)->delete();
+            return response()->json([
+                'code' => 200,
+                'message' => 'success'
+            ], 200);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'fails',
+
+            ], 500);
+        }
     }
 }

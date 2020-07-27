@@ -4,7 +4,13 @@
 @endsection
 
 @section('css')
-  <link rel="stylesheet" href="{{ asset('/admins/product/list.css') }}">
+  <link rel="stylesheet" href="{{ asset('/admins/product/index/list.css') }}">
+@endsection
+
+@section('js')
+    <script src="{{ asset('/venders/sweetAlert2/sweetalert2.js') }}"></script>
+    <script src="{{ asset('/admins/product/index/list.js') }}"></script>
+
 @endsection
 
 
@@ -48,8 +54,8 @@
               <td>{{optional($data->category)->name}}</td>
 
               <td>
-                  <a href="{{route('product.edit' , ['id' => $data->id])}}" class="btn btn-info">Sửa</a>
-                  <a href="{{route('product.delete', ['id' => $data->id])}}" class="btn btn-danger ">Xóa</a>
+                  <a href="{{route('product.edit' , ['id' => $data->id])}}" class="btn btn-info"><i class="fa fa-pen"></i> Sửa</a>
+                  <a data-url="{{ route('product.delete', ['id' => $data->id]) }}" class="btn btn-danger action_delete"><i class="fa fa-trash"> </i> Xóa</a>
               </td>
 
             </tr>

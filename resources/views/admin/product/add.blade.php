@@ -31,12 +31,22 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label for="">Tên sản phẩm</label>
-                    <input type="text" name="name" class="form-control" id="" placeholder="Tên sản phẩm">
+                    <input type="text" name="name"  value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror" id="" placeholder="Tên sản phẩm">
+                    @if ($errors->has('name'))
+                    <span class="text text-danger">
+                        {{ $errors->first('name') }}
+                    </span>
+                    @endif
                   </div>
 
                  <div class="form-group">
                     <label for="">Giá sản phẩm</label>
-                    <input type="text" class="form-control" name="price" id="" placeholder="Giá sản phẩm">
+                    <input type="text" value="{{old('price') }}" class="form-control @error('price') is-invalid @enderror" name="price" id="" placeholder="Giá sản phẩm">
+                    @error('price')
+                        <span class="text text-danger"> {{ $message }}</span>
+                    @enderror
+
+
                  </div>
 
                  <div class="form-group">
@@ -54,24 +64,29 @@
                     <label for="">Chọn tag</label>
 
                     <select class="form-control tags_select_choose" name="tags[]" multiple="multiple">
-                        <option style="background-color: rgb(29, 25, 25); color:white" selected="selected">orange</option>
-                        <option>white</option>
-                        {{-- <option selected="selected">purple</option> --}}
+
                       </select>
                  </div>
 
                   <div class="form-group">
                     <label>Chọn danh mục </label>
-                    <select name ="category_id" class="form-control select_category" >
+                    <select name ="category_id" class="form-control select_category @error('category_id') is-invalid @enderror" >
                         <option value=""> Danh mục</option>
                         {!! $htmlOption !!}
                     </select>
+                    @error('category_id')
+                        <span class="text text-danger">{{ $message }}</span>
+                    @enderror
                   </div>
 
                   <div class="col-md-12">
                 <div class="form-group">
                    <label for=""> Nội dung</label>
-                   <textarea class="form-control my-editor" name="content" id="" rows="8"></textarea>
+                   <textarea class="form-control my-editor @error('content') is-invalid @enderror" name="content" id="" rows="8">{{ old('content') }}</textarea>
+                   @if($errors->has('content'))
+                        <span class="text text-danger"> {{$errors->first('content')}}</span>
+
+                    @endif
                  </div>
 
                   </div>
